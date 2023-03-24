@@ -1,0 +1,50 @@
+% TeX file "identification"
+
+% Master thesis 
+% Sven Jacobs
+% Winter 2022, M.Sc. Economics, Bonn University
+% Supervisor: Prof. Dr. Dominik Liebl
+
+
+\section{Identification} \label{sec:identification}
+
+As described above, a fundamental problem is that we never observe treated and untreated units with the same value of the assignment variable.
+Near the cutoff, though, we do observe treatment and control units, respectively, that exhibit a similar value of the assignment variable.
+If in the absence of the treatment, the average potential outcomes would also be similar, we could compare these control and treatment units to learn about the average effect of the treatment near the cutoff.
+\textcite{Hahn_2001} were the first to present a formal identification result motivated by this kind of continuity consideration. 
+
+The key assumption to identify the sharp RD treatment effect
+\begin{equation}
+\tauSRD \equiv \E[Y(1) - Y(0) | X = c]
+\end{equation}
+is that the expected potential outcome functions are continuous at the cutoff.
+That is, $\E[Y(0) | X = x]$ and $\E[Y(1) | X = x]$ are continuous at $x = c$.%
+\footnote{Some researchers impose the stronger assumption that continuity holds over the full support (e.g.\ \cite{Imbens_2008}).}
+Then, 
+\begin{align}
+	\tauSRD &= \lim_{x \downarrow c} \E[Y(1) | X = x] - \lim_{x \uparrow c} \E[Y(0) | X = x] \\
+	&= \lim_{x \downarrow c} \E[Y | X = x] - \lim_{x \uparrow c} \E[Y | X = x] \,.
+\end{align}
+Therefore, the RD treatment effect can be estimated as the vertical distance between the two regression functions at the cutoff.
+Under the continuity assumption, the average outcome of the units just below the cutoff constitutes a valid counterfactual for the just treated units.  
+We also notice that for identification no additional covariates are required.
+As we discuss later, however, covariates can be included to increase precision.
+
+In Figure~\ref{fig:regression_functions_SRDD} both potential outcome functions are continuous in the assignment variable.
+The treatment effect $\tau_{\SRD}$ is then identified as the vertical distance between the functions at the cutoff (dashed black line).
+
+A peculiarity of the parameter $\tau_{\SRD}$ is its very local nature.
+The sharp RD design can, in general, only recover the ATE at the cutoff.
+That is, for units with an assignment value of $X_i = c$.
+In general, the effect of the treatment is heterogeneous and varies with the assignment variable.
+Without further assumptions, we cannot make any statement about the ATE for units away from the cutoff.
+In the scenario of Figure~\ref{fig:regression_functions_SRDD}, the treatment effect $\tau_{\SRD}$ is indeed representative for the whole population,
+due to the shape of the average potential outcome functions (approximately a homogeneous ATE).
+In practice one would have to assume such shapes.
+In the past years, different approaches have been suggested to increase the limited external validity of the RD treatment effect
+(e.g.\ \textcite{Angrist_2015}, \textcite{Bertanha_2020}).
+
+At the end of the section, we note that the continuity-based identification of RD effects following \textcite{Hahn_2001} is the standard.
+Another framework for RD analysis assumes that the treatment is as-if randomly assigned near the cutoff.
+In this randomization-based framework, the RD analysis is closely connected to the analysis of experiments (e.g.\ randomization inference).
+The interested reader is referred to \textcite{Lee_2008}, and \textcite{Sekhon_2017}. 

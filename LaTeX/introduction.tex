@@ -1,0 +1,57 @@
+% TeX file "introduction"
+
+% Master thesis 
+% Sven Jacobs
+% Winter 2022, M.Sc. Economics, Bonn University
+% Supervisor: Prof. Dr. Dominik Liebl
+
+
+\section{Introduction}
+
+The regression discontinuity (RD) design is regarded as one of the most credible non-experimental research designs,
+widely applied in economics for treatment effect analysis.
+The key feature of any RD design is that treatment assignment changes abruptly at a known threshold value of an assignment variable,
+which is called the cutoff.
+Such cutoff rules can often be found in practice.
+An example is the award of a scholarship when a pupil scores above a certain point count in a standardized test.
+Here, the assignment variable is the test score, the cutoff is the required point count, and the treatment is being awarded the scholarship.
+A research question might be what effect the scholarship has on later academic achievements.
+In the basic setup which we focus on (\enquote{sharp} design), the actual treatment status relates one-to-one to the treatment assignment.
+In contrast, when the treatment probability changes discontinuously at the cutoff,
+but not sharply by one, the design is labeled \enquote{fuzzy}.
+
+Under certain assumptions, mainly one that ensures the comparability of just-treated and just-untreated units,
+the effect of the treatment at the cutoff can be estimated as the (potential) jump in the outcome of interest at the cutoff.
+For reasons we discuss later, RD estimation is generally considered a nonparametric estimation problem.
+Whereas estimation is straightforward once a bandwidth is selected,
+inference for the RD treatment effect poses a challenge.
+The reason is the (smoothing) bias associated with the nonparametric estimation,
+rendering conventional inference, in general, invalid.
+
+The goal of this thesis is to provide an overview and illustration of modern (sharp) RD analysis,
+focusing on recent approaches to conduct valid bias-aware inference.
+We discuss identification, estimation, validation and present the three main inference procedures taking bias into account.
+An application to real data illustrates all the steps in a sharp RD analysis,
+and a Monte Carlo simulation investigates the finite-sample performance of the asymptotically valid inference procedures.
+
+The RD design was initially proposed and applied in \citeyear{Thistlethwaite_1960} by \citeauthor{Thistlethwaite_1960}
+(impact on merit awards on future academic outcomes),
+but received little attention until the late 1990s,
+when some studies exploiting the RD design were published in leading journals
+(e.g.\ \textcite{Angrist_1999}, \textcite{Black_1999}).
+From then on the RD design has become an active and still rapidly expanding research area.
+Arguably the most important theoretical contribution is due to \textcite{Hahn_2001},
+who presented formal identification results and recommended local linear estimation.
+The two main contributions to the bias-aware RD literature came from \textcite{Calonico_2014} with their proposed robust bias-correction,
+and \textcite{Armstrong_2020} proposing to use inflated critical values based on the maximal possible bias.
+For early general reviews see \textcite{Imbens_2008}, and \textcite{Lee_2010};
+for an up-to-date review \textcite{Cattaneo_2022}.
+
+The structure of the thesis is as follows.
+In the next section, we formally introduce the sharp RD design and briefly consider extensions to the basic setup.
+Section~\ref{sec:identification} discusses identification, and Section~\ref{sec:estimation} estimation.
+In Section~\ref{sec:inference} the challenge of valid inference is emphasized and the bias-aware approaches are presented.
+All the steps of a sound RD analysis are illustrated with a real-data application in Section~\ref{sec:application},
+which is a reanalysis of a prominent study by \textcite{Ludwig_2007}.
+Afterwards, the finite-sample behavior of the bias-aware procedures is evaluated by means of a Monte Carlo study.
+Section~\ref{sec:conclusion} concludes and the appendix contains mostly tables and figures from the application.

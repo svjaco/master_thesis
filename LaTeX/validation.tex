@@ -1,0 +1,82 @@
+% TeX file "validation"
+
+% Master thesis 
+% Sven Jacobs
+% Winter 2022, M.Sc. Economics, Bonn University
+% Supervisor: Prof. Dr. Dominik Liebl
+
+
+\section{Validation} \label{sec:validation}
+
+An important part of any RD analysis is to provide evidence for its validity.
+Evidence that the RD design can be used to learn about the local effect of the treatment on the outcome of interest.
+Even though the continuity assumption on the expected potential outcome functions cannot be tested itself,
+we present different checks to offer indirect evidence.
+It should also be emphasized that the graphical illustration of the RD design is a powerful first step.
+A plot of the outcome against the assignment variable can reveal the presence or absence of a jump at the cutoff.
+In addition, one gets an impression of the shape of the underlying functions.
+For the sake of clarity, often local means after binning instead of all observations are displayed.
+To indicate the overall structure of the data, global polynomial fits (separately for control and treatment) are added.
+Graphical RD presentation and optimal bin selection is discussed by \textcite{Calonico_2015a}.
+
+\subsection{Manipulation of the assignment variable}
+
+When the treatment is beneficial, units being placed into control have an incentive to manipulate their value of the assignment variable.
+Successful manipulation can result in units barely receiving treatment being systematically different from units barely missing treatment,
+apart from the treatment status.
+If these differences affect the outcome, the units close to the cutoff cannot be compared to each other.
+Continuity of the average potential outcomes would be violated, and the RD design would be invalid.
+A prominent example is the award of a scholarship when a pupil scores above a grade threshold in a test.
+A certain type of parent (e.g.\ highly ambitious) of just-failing children might try to somehow get the score improved.
+Assume the question is what effect the scholarship has on later academic achievement.
+If these parents are successful, an RD design would likely be invalid.
+The reason is that after manipulation the average potential academic achievement of pupils just receiving the scholarship is likely to be higher,
+independently from the scholarship.
+Besides formal testing, administrative knowledge about the treatment-assigning process is helpful to learn about potential manipulation.
+In the scholarship example, for instance, information about the test design, grading process, grade threshold, how parents might appeal.
+In some cases, based on this knowledge manipulation can credibly be ruled out.
+
+When the assignment variable cannot be precisely manipulated, we expect a continuous distribution.
+A systematic difference in the number of units near the cutoff would question the RD validity.
+For example, when there are unexpectedly many pupils just above the grade threshold.
+A carefully created histogram can reveal such a jump in the density.
+A more formal way is a density-continuity-test, testing whether the density of the assignment variable is continuous at the cutoff 
+(the null hypothesis).
+Failing to reject provides evidence against manipulation.
+Any such test proceeds by estimating the density near the cutoff, separately below and above the cutoff. 
+\textcite{McCrary_2008} was the first to propose a test, \textcite{Cattaneo_2020} developed a superior implementation.
+To illustrate, Figure~\ref{fig:McCrary} in the appendix shows two densities, one with and one without manipulation.
+
+Another approach to detect manipulation is to check whether the units near the cutoff are similar with respect to covariates
+that could not have been affected by the treatment (e.g.\ predetermined covariates).
+For example, whether parents' education of both pupil types (score slightly below and slightly above, respectively) is similar.
+A systematic difference would point to manipulative behavior.
+A formal analysis consists in an RD analysis, replacing the outcome $Y$ with a covariate.   
+For each covariate, a separate analysis (i.e.\ bandwidth selection, treatment effect estimation, bias-aware inference) is conducted.
+We should not find jumps that are distinguishable from zero.
+
+\subsection{Placebo cutoffs}
+
+The key identification assumption in the sharp RD design, continuity of the average potential outcome functions at the cutoff, is inherently untestable.
+What can be tested instead, is whether the respective function, $\E[Y(0) | X=x]$ for $x<c$ and $\E[Y(1) | X=x]$ for $x \geq c$,
+is continuous away from the cutoff.
+To do so, we perform an RD analysis for placebo cutoffs, where the treatment status does not change.
+For placebo cutoffs below the true cutoff, only control observations are used.
+For placebo cutoffs above, only treated observations.
+\textcite{Imbens_2008} suggest to choose the two median values.  
+If we find jumps away from the cutoff, that cannot be explained plausibly,
+this would doubt the interpretation of a jump at the real cutoff as the treatment effect.
+
+\subsection{Bandwidth sensitivity and donut holes}
+
+Finally, it is always advisable to check how sensitive the results are to the bandwidth choice.
+It is reassuring if the findings are stable for different neighborhoods.
+A plot of the estimated treatment effect together with its robust confidence interval over a range of bandwidths is typically insightful.
+We expect that, in line with the bias-variance trade-off,
+for bandwidths larger than the MSE-optimal one the confidence intervals will get shorter but displaced.
+
+Another sensitivity check is to exclude some of the closest observations to the cutoff from the RD analysis,
+known as the donut-hole-approach \parencite{Barreca_2011}.
+At first sight, it seems illogical to exclude the observations that are usually the most informative.
+The motivation is that if manipulation has taken place, likely the units closest to the cutoff are involved.   
+In practice, estimation and inference results for different sizes of the donut hole should be compared.

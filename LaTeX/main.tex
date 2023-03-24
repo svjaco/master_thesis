@@ -1,0 +1,194 @@
+% TeX main file
+
+% Master thesis 
+% Sven Jacobs
+% Winter 2022, M.Sc. Economics, Bonn University
+% Supervisor: Prof. Dr. Dominik Liebl
+
+                                                                                                                                                                              
+\documentclass[a4paper, 12pt, bibliography=totoc]{scrartcl}   
+
+% Packages
+
+% General  
+\usepackage{lmodern}
+\usepackage{csquotes}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[section]{placeins}
+
+% Spacing 
+\usepackage{geometry}
+	\geometry{a4paper, top=2cm, left=3cm, right=2cm, bottom=2cm, footskip=1.25cm}	
+\usepackage[onehalfspacing]{setspace}
+\setcapindent{0pt}
+\usepackage[hang]{footmisc}
+	\setlength{\footnotemargin}{2.5mm}
+
+% Plotting
+\usepackage{graphicx}
+	\graphicspath{{figures/}}
+\usepackage{pgfplots}
+	\pgfplotsset{compat=1.18}
+\usepackage{subcaption}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{lscape} 
+
+% Math
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{mathtools}
+	\mathtoolsset{showonlyrefs}
+
+% Settings for PDF
+\usepackage{hyperref}
+	\hypersetup{
+	pdftitle={Bias-aware inference in the regression discontinuity design},
+	pdfauthor={Sven Jacobs},
+	pdfsubject={Regression discontinuity design},    
+	pdfkeywords={Master thesis; Winter 2022, M.Sc. Economics, Bonn University; Supervisor: Prof. Dr. Dominik Liebl}, 
+	hidelinks}
+
+% Bibliography 
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, maxbibnames=99, uniquelist=false]{biblatex} 
+	\addbibresource{bibliography.bib}
+\renewbibmacro{in:}{}	
+\renewbibmacro{volume+number+eid}{
+	\printfield{volume}
+	\setunit{\addnbthinspace}
+	\printfield{number}
+	\setunit{\addcomma\space}	
+	\printfield{eid}}
+\DeclareFieldFormat[article]{number}{\mkbibparens{#1}}
+\DeclareFieldFormat{url}{\url{#1}}
+\renewcommand{\subtitlepunct}{\addcolon\space}
+\renewcommand{\nameyeardelim}{\addcomma\space}
+
+% Math operators 
+\DeclareMathOperator{\Prob}{P}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\ABias}{ABias}
+\DeclareMathOperator{\AVar}{AVar}
+\DeclareMathOperator{\AMSE}{AMSE}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\SE}{SE}
+\DeclareMathOperator{\cv}{cv}
+\DeclareMathOperator{\Beta}{Beta}
+
+% Math environments
+
+% Own commands
+\newcommand{\SRD}{\textup{SRD}}
+\newcommand{\tauSRD}{\tau_{\SRD}}
+\newcommand{\tauhatSRD}{\hat{\tau}_{\SRD}}
+\newcommand{\tautildeSRD}{\tilde{\tau}_{\SRD}}
+\newcommand{\lowl}{\textup{l}}
+\newcommand{\lowr}{\textup{r}}
+\newcommand{\hlowl}{h_{\lowl}}
+\newcommand{\hlowr}{h_{\lowr}}
+\newcommand{\mulowl}{\mu_{\lowl}}
+\newcommand{\mulowr}{\mu_{\lowr}}
+\newcommand{\muhatlowl}{\hat{\mu}_{\lowl}}
+\newcommand{\muhatlowr}{\hat{\mu}_{\lowr}}
+\newcommand{\mulowlone}{\mu_{\lowl, 1}}
+\newcommand{\mulowlp}{\mu_{\lowl, p}}
+\newcommand{\mulowrone}{\mu_{\lowr, 1}}
+\newcommand{\mulowrp}{\mu_{\lowr, p}}
+\newcommand{\diff}{\mathop{}\!\textup{d}}
+\newcommand{\minwd}{\hspace{9.333pt}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+% Own functions
+
+% Miscellaneous
+% \usepackage{showframe}
+
+\begin{document}
+
+\newgeometry{top=2cm, left=2cm, right=2cm, bottom=2cm}
+
+\pdfbookmark[1]{Title page}{Title page}
+\begin{titlepage}
+	\topskip0pt
+	\vspace*{\fill}
+	\begin{center}
+	 	\LARGE
+		\textsf{\textbf{Bias-aware inference in the regression \\ discontinuity design}}  
+		\vspace{2.5cm}
+	 
+		\large	
+		Master Thesis Presented to the \\  
+		Department of Economics at the \\  
+		Rheinische Friedrich-Wilhelms-Universität Bonn
+		\vspace{1.0cm}  
+		
+		In Partial Fulfillment of the Requirements for the Degree of \\
+		Master of Science (M.Sc.)
+		\vspace{5.0cm}
+		
+		Supervisor: Prof.\ Dr.\ Dominik Liebl 
+		\vspace{1.5cm}
+		
+		Submitted in March 2023 by: \\
+		Sven Jacobs \\
+		Matriculation Number: 2879411
+	\end{center}
+	\vspace*{\fill}
+\end{titlepage}
+
+\restoregeometry 
+	
+\newpage
+
+\pagenumbering{Roman}
+\setcounter{page}{2}
+
+\pdfbookmark[1]{Contents}{Contents}
+\tableofcontents  
+
+\newpage
+
+\pagenumbering{arabic}  
+
+\input{introduction.tex}
+\input{regression_discontinuity_designs.tex}
+\input{identification.tex}
+\input{estimation.tex}
+\input{inference.tex}
+\input{validation.tex}
+\input{application.tex}
+\input{simulation.tex}
+\input{conclusion.tex}
+
+\clearpage
+
+\input{appendix.tex}
+
+\clearpage
+
+\nocite{R_2023} 
+\printbibliography
+
+\newpage
+
+\newgeometry{top=2cm, left=2cm, right=2cm, bottom=2cm}
+
+\thispagestyle{empty}
+\section*{Statement of authorship}
+
+I hereby confirm that the work presented has been performed and interpreted solely by myself
+except for where I explicitly identified the contrary.
+I assure that this work has not been presented in any other form for the fulfillment of any other degree or qualification.
+Ideas taken from other works in letter and in spirit are identified in every single case.
+
+\vspace{3cm}
+
+\begin{center}
+	\parbox{6cm}{\hrule \strut \centering Place, Date} \hspace{1.5cm} \parbox{6cm}{\hrule \strut \centering Signature}	 	
+\end{center}
+
+\end{document}

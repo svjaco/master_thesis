@@ -1,0 +1,175 @@
+% TeX file "inference"
+
+% Master thesis 
+% Sven Jacobs
+% Winter 2022, M.Sc. Economics, Bonn University
+% Supervisor: Prof. Dr. Dominik Liebl
+
+
+\section{Inference} \label{sec:inference}
+
+The estimator $\tauhatSRD$ is MSE-optimal when constructed with the MSE-optimal bandwidth (or two distinct MSE-optimal bandwidths).
+In the next step, we want to conduct inference for $\tauSRD$, i.e.\ building confidence intervals and testing hypotheses.
+Valid inference for the RD treatment effect, however, is non-trivial.
+The challenge is the present bias associated with the nonparametric estimation.
+Under suitable regularity conditions \parencite[Lemma~A.1]{Calonico_2014} it can be shown that as $n \rightarrow \infty$, $h \rightarrow 0$, $nh \rightarrow \infty$,
+\begin{equation} \label{eq:asymp-normal}
+	\frac{\tauhatSRD - \tauSRD}{\SE(\tauhatSRD)} - \frac{\Bias(\tauhatSRD)}{\SE(\tauhatSRD)} \overset{d}{\longrightarrow} \mathcal{N}(0, 1) \,,
+\end{equation}
+where the standard error $\SE(\tauhatSRD)$ estimates the standard deviation of $\tauhatSRD$.
+The asymptotic distribution of the $t$-statistic is not centered at zero.    
+Hence, if bias is not negligible, standard least squares inference (e.g.\ standard $t$-test) will be invalid.
+A correct null hypothesis of no treatment effect would be over-rejected. 
+Valid inference procedures have to be aware of the (unknown) bias and incorporate it in some way.
+In the following, we present the three main bias-aware approaches.
+Their performance in practice will be assessed and compared in a simulation study as well as an application to real data.
+
+\subsection{Undersmoothing}
+
+The first approach is called undersmoothing.
+The idea is to employ conventional least squares inference by choosing a smaller (\enquote{undersmoothed}) bandwidth relative to the MSE-optimal one.
+The theoretical argument is that shrinking the bandwidth at a faster rate, e.g.\ $h \sim n^{-\delta}$ with $\delta > 1/5$ for $p=1$, 
+eliminates the bias in the approximate large-sample distribution.
+Formally, the ratio of bias and standard error in \eqref{eq:asymp-normal} converges in probability to zero, $\Bias(\tauhatSRD) / \SE(\tauhatSRD) \overset{p}{\longrightarrow} 0$. 
+An asymptotic $(1-\alpha)100\%$ confidence interval can then be constructed by 
+\begin{equation}
+	\text{CI}_{\text{US}} = \left[\, \tauhatSRD \pm |z_{\alpha/2}| \cdot \SE(\tauhatSRD) \,\right] \,,  
+\end{equation}  
+where $z_{\alpha}$ denotes the $\alpha$-quantile of the standard normal distribution and the subscript \enquote{US} refers to 
+\enquote{Undersmoothing}.
+For the standard error different suitable options are available.
+The usual choice is a weighted nearest neighbor or Eicker-Huber-White estimator.
+Alternatively an estimator based on $\AVar(\tauhatSRD)$ in \eqref{eq:AVar}.
+
+There are some drawbacks with undersmoothing.
+There exists no clear guidance on how much to undersmooth,
+i.e.\ how much the bandwidth for constructing CI\textsubscript{US} should deviate from $h_{\text{MSE}}$.
+In addition, a smaller bandwidth means that fewer observations are included and variance is increased.
+Lastly, bias is still existent in finite samples.
+
+\subsection{Robust bias-correction}
+
+An alternative approach is to estimate the smoothing bias and to base inference on the bias-corrected estimate.
+The $t$-statistic will be modified and we obtain bias-corrected confidence intervals, centered at the bias-corrected estimate.
+Compared to undersmoothing, the MSE-optimal bandwidth (and hence the same data) can be used for estimation and inference.  
+\textcite{Calonico_2014} proposed what they call a robust bias-correction, which accounts for the additional variability of the bias estimation.
+
+In a first step, the leading bias $\ABias(\tauhatSRD)$ is estimated and removed from the point estimator $\tauhatSRD$.
+From discussing bandwidth selection in the previous \hyperref[sec:estimation]{section}, we already know how an estimator (of $\mathcal{B}$ in \eqref{eq:ABias}) is constructed:
+The unknown derivatives are estimated by preliminary local polynomial regressions, with a higher polynomial order $q \geq p+1$ and a separate bandwidth $b$.
+The estimated bias is already available when the MSE-optimal bandwidth has been implemented for point estimation.
+
+Standard bias-correction then would use the conventional $\SE(\tauhatSRD)$ for the confidence interval,
+thereby ignoring the introduced variability from the additional bias-correction step.
+This is known to translate into poor coverage in applications (e.g.\ \cite{Hall_1992}).
+In their robust bias-correction, \textcite{Calonico_2014} account for the additional variability
+by allowing the estimated bias to converge in distribution to a random variable and contribute to the distributional approximation of $\tauhatSRD$.
+The new asymptotic variance is larger,
+and the resulting standard error $\SE_{\text{RBC}}(\tauhatSRD)$ will be larger than $\SE(\tauhatSRD)$.
+All together, an asymptotically valid ${(1-\alpha)100\%}$ confidence interval for $\tauSRD$ is
+\begin{equation}
+	\text{CI}_{\text{RBC}} = \left[\, \left(\tauhatSRD - \widehat{\ABias}(\tauhatSRD)\right) \pm |z_{\alpha/2}| \cdot \SE_{\text{RBC}}(\tauhatSRD) \,\right] \,,
+\end{equation}
+where the subscript \enquote{RBC} refers to \enquote{Robust Bias-Correction}.
+The interval is not centered at the MSE-optimal estimate $\tauhatSRD$, instead it is centered at the bias-corrected estimate.
+
+Building on this robust bias-correction procedure, \textcite{Calonico_2020} examine what would be an optimal bandwidth choice for inference
+(as compared to the MSE-optimal bandwidth for point estimation).
+The authors' objective is to minimize the coverage error (CE) of the robust bias-corrected confidence interval CI\textsubscript{RBC},
+i.e.\ the discrepancy between the empirical coverage and the nominal level.
+Their bandwidth $h_{\text{CE}}$ minimizes an asymptotic approximation to the coverage error of CI\textsubscript{RBC}.
+Consequently, when constructed with the CE-optimal bandwidth, CI\textsubscript{RBC} will be both valid and CE-optimal in large samples.
+Even though no closed-form solution for $h_{\text{CE}}$ exists, it declines at a faster rate than $h_{\text{MSE}}$ and is therefore undersmoothed:
+$h_{\text{CE}} \sim n^{-1/(p+3)}$ compared to $h_{\text{MSE}} \sim n^{-1/(2p+3)}$.
+
+\subsection{Inflated critical value} \label{sec:AK}
+
+The third approach by \textcite{Armstrong_2020} takes the potential bias of $\tauhatSRD$ into account
+by using a larger critical value compared to the conventional or undersmoothing confidence interval.
+In the following we present the general concept, for (technical) details we refer to \citeauthor{Armstrong_2020} (\citeyear{Armstrong_2020}, \citeyear{Armstrong_2018}).
+
+Let $\E_g[\tauhatSRD | X_1, \dots, X_n]$ denote the conditional expectation of $\tauhatSRD$ when the conditional expectation function $\E[Y | X=x]$ is $g$.
+The authors assume that $g$ belongs to a certain class of functions $\mathcal{G}$ (described below),
+and construct confidence intervals achieving asymptotically correct coverage uniformly over $\mathcal{G}$. 
+The worst-case bias of $\tauhatSRD$ over the function class $\mathcal{G}$ is
+\begin{equation}
+	\overline{\Bias}(\tauhatSRD) \equiv \sup_{g \in \mathcal{G}} \, \bigl\lvert \E_g[\tauhatSRD | X_1, \dots, X_n] - \tauSRD \bigr\rvert \,.
+\end{equation}
+The second term in \eqref{eq:asymp-normal} is bounded in absolute value by $\overline{\Bias}(\tauhatSRD) / \SE(\tauhatSRD)$.
+Then, asymptotically, the $(1-\alpha)$-quantile of the absolute value of the $t$-statistic is bounded by $\cv_{1-\alpha}(\overline{\Bias}(\tauhatSRD) / \SE(\tauhatSRD))$,
+where $\cv_{1-\alpha}(r)$ corresponds to the $(1-\alpha)$-quantile of the $\lvert \mathcal{N}(r, 1) \rvert$ distribution. 
+Thus, an asymptotically valid $(1-\alpha)100\%$ confidence interval is obtained as
+\vspace{2ex}
+\begin{equation}
+	\text{CI}_{\text{AK}} = \left[\, \tauhatSRD \pm \cv_{1-\alpha}\left(\frac{\overline{\Bias}(\tauhatSRD)}{\SE(\tauhatSRD)}\right) \cdot \SE(\tauhatSRD) \,\right] \,,
+\vspace{1ex}
+\end{equation} 
+where the subscript \enquote{AK} refers to \enquote{\citeauthor{Armstrong_2020}}.
+
+\citeauthor{Armstrong_2020} consider two function classes.
+For the description we focus on local linear estimation.
+Let $g_\lowl(x) = g(x)\mathbf{1}(x<c)$ and $g_\lowr(x) = g(x)\mathbf{1}(x \geq c)$
+denote the part of the conditional expectation function below and above the cutoff, respectively.
+For the first class
+\begin{equation}
+	\mathcal{G}_{\text{SRD,Tay}}(M) = \left\{ g_\lowl + g_\lowr \,|\, g_\lowl, g_\lowr \in \mathcal{G}_{\text{Tay,2}}(M) \right\} \,,
+\end{equation}
+the function $g$ is assumed to lie in the second-order Taylor class $\mathcal{G}_{\text{Tay,2}}(M)$ on either side of the cutoff.
+This Taylor class requires $g_\lowl$ and $g_\lowr$ to be twice differentiable in a neighborhood left and right to the cutoff, respectively,
+with the second derivative bounded in absolute value by $M$ in that neighborhood.
+The class does not impose smoothness away from the cutoff, which might be undesirable in empirical applications.
+Therefore, for the alternative class
+\begin{equation}
+	\mathcal{G}_{\text{SRD,Höl}}(M) = \left\{ g_\lowl + g_\lowr \,|\, g_\lowl, g_\lowr \in \mathcal{G}_{\text{Höl,2}}(M) \right\} \,,
+\end{equation}
+the function $g$ is assumed to lie in the second-order Hölder class $\mathcal{G}_{\text{Höl,2}}(M)$ on either side of the cutoff.
+That is, $g$ has to be twice differentiable on either side of the cutoff,
+and $M$ bounds the magnitude of the second derivative globally.%
+\footnote{For the definition of $\mathcal{G}_{\text{Tay,2}}(M)$ and $\mathcal{G}_{\text{Höl,2}}(M)$ see \textcite[16]{Armstrong_2020}.}
+
+The smoothness constant $M$ needs to be specified.
+However, to maintain validity uniformly over the whole function class,
+without further restrictions $M$ has to be set manually and cannot be data-driven.
+Therefore, the advice is to use problem-specific knowledge to decide what choice is reasonable a priori.
+Otherwise, two methods can provide guidance.
+First, it is possible to place a lower bound on $M$ from the data \parencite[Supplement]{Kolesar_2018}.
+Second, under the restriction that the second derivative in a neighborhood of the cutoff
+is bounded by the maximum second derivative of a $\tilde{p}$th-order global polynomial approximation,
+the bound $M$ can be chosen by a global polynomial rule of thumb:
+A global polynomial of order $\tilde{p}$ is fit on either side of the cutoff,
+and $M$ estimated to be the largest second derivative \parencite[Supplement]{Armstrong_2020}.
+
+The confidence interval CI\textsubscript{AK} can be either constructed with a bandwidth that is MSE-optimal or inference-optimal.
+For the former case, \textcite{Armstrong_2020} derive the bandwidth minimizing the maximum MSE over the function class $\mathcal{G}$.
+For the latter case, the bandwidth is optimized for length and coverage, and will be slightly oversmoothed.
+
+\subsection{Including covariates}
+
+We conclude the section with covariate-adjusted RD analysis.
+Researchers may want to include additional covariates for two reasons.
+First, to increase precision and obtaining shorter confidence intervals.
+Second, to restore identification when control and treated units near the cutoff differ systematically,
+rendering the assumption of continuity of the average potential outcomes implausible.
+For the latter purpose, usually additional parametric assumptions are required if the estimation target remains $\tauSRD$.
+In the following, we only consider covariate inclusion for efficiency gains.
+
+Let $\bm{Z}_i(0)$ and $\bm{Z}_i(1)$ be two vectors of potential covariates,
+where $\bm{Z}_i(0)$ contains the covariate values that would be observed under control, and $\bm{Z}_i(1)$ what would be observed under treatment.
+The observed covariate vector for unit $i$ is then
+\begin{equation}
+	\bm{Z}_i = \begin{cases} 
+		\bm{Z}_i(0) & , X_i < c \\
+		\bm{Z}_i(1) & , X_i \geq c
+	\end{cases} \,.
+\end{equation}
+A natural approach is to directly include the covariates in the local polynomial regression.
+\textcite{Calonico_2019} recommend to do this linearly, additive-separably and without interacting the covariates with the treatment.
+That is, adding $\bm{Z}_i$ to a fully interacted weighted local regression
+(the latter is algebraically equivalent to the two-step estimation from above).
+Let $\tautildeSRD$ denote the covariate-adjusted estimator.
+The authors show that, when the covariates are included this way,
+under weak regularity conditions a zero RD treatment effect on the covariates (i.e.\ $\E[\bm{Z}_i(1)-\bm{Z}_i(0) | X_i=c] = 0$)
+is sufficient for $\tautildeSRD$ to consistently estimate $\tauSRD$.
+The condition should hold, for example, for covariates determined prior to the treatment assignment.
+
+Notice that including covariates results in general in a different bandwidth, as the optimal bandwidth formulas depend on the covariates.

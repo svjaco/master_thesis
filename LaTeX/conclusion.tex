@@ -1,0 +1,32 @@
+% TeX file "conclusion"
+
+% Master thesis 
+% Sven Jacobs
+% Winter 2022, M.Sc. Economics, Bonn University
+% Supervisor: Prof. Dr. Dominik Liebl
+
+
+\section{Conclusion} \label{sec:conclusion}
+
+This thesis provided an overview and illustration of modern (sharp) RD analysis
+that takes potential bias into account to obtain valid inference for
+the nonparametrically estimated RD treatment effect.
+We discussed identification, estimation, validation and
+presented the three main bias-aware inference approaches:
+undersmoothing, robust bias-correction \parencite{Calonico_2014}, and inflated critical values \parencite{Armstrong_2020}.
+We reanalyzed an older prominent RD study by \textcite{Ludwig_2007},
+particularly by conducting bias-aware inference,
+which provided support for the original findings.
+In a Monte Carlo study we assessed and compared the finite-sample performance of the asymptotically valid inference procedures.
+Based on the insights from all the parts, we discourage the application of ad hoc undersmoothing,
+especially as the main approach to achieve valid bias-aware inference.
+Instead, we recommend to report results for the two other approaches with the corresponding optimal bandwidth choices,
+and the rule of thumb $M_{\text{ROT}}$ if no problem-specific knowledge for the choice is available.
+If necessary, further sensitivity checks for the confidence intervals can be conducted.
+
+The Monte Carlo experiment can be extended in several directions.
+To ensure that the results are not sensitive to the chosen data generating process,
+we can alter the distribution of the assignment variable (e.g.\ to a uniform distribution),
+and the distribution of the error (e.g.\ to a log-normal distribution).
+Furthermore, we can consider heteroskedastic errors, a different error variance, and a different sample size.
+A natural extension of this thesis is bias-aware inference in fuzzy regression discontinuity designs.
